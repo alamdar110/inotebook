@@ -5,6 +5,7 @@ const port = 3000
 
 db.connectDb();
 
+app.use(express.json());
 
 //Routes
 app.use('/api/notes', require('./routes/notes'));
