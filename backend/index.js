@@ -5,9 +5,10 @@ const port = 3000
 
 db.connectDb();
 
-app.get('/', (req, res) => {
-    res.send('Hello Alamdar!')
-})
+
+//Routes
+app.use('/api/notes', require('./routes/notes'));
+app.use('/api/auth', require('./routes/auth'));
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
