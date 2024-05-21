@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+var jwt = require('jsonwebtoken');
+const JWT_SECRET = 'jwtrandomsecretkey';
 // Define routes using the router
 
 router.post('/create', [
@@ -28,13 +31,24 @@ router.post('/create', [
         if (!result.isEmpty()) {
             return res.status(400).json({ errors: result.array() });
         } else {
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hash = bcrypt.hashSync(req.body.password, salt);
+            // console.log(hash);
             user = new User({
                 username: req.body.username,
                 email: req.body.email,
-                password: req.body.password
+                password: hash
             });
-            await user.save();
-            return res.status(200).json({ message: "User created successfully", user }); // Include user data in the response
+            data = {
+                user
+            }
+            console.log(user);
+            var token = jwt.sign(data, JWT_SECRET);
+            return res.status(200).json({
+                token
+            });
+            // await user.save();
+
         }
     } catch (err) {
         console.error(err.message);
