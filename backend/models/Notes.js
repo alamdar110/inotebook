@@ -1,6 +1,10 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const NotesSchema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
     title: {
         type: String,
         required: true
