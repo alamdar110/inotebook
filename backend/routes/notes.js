@@ -32,7 +32,7 @@ router.post('/writenotes', [
             const notes = new Notes({
                 title: req.body.title,
                 description: req.body.description,
-                tag: req.body.tag ? req.body.tag : "General",
+                tag: req.body.tag ? req.body.tag : "general",
                 user_id: req.user
             });
 
@@ -65,8 +65,8 @@ router.put('/updatenotes/:id', fetchUser, async(req, res) => {
         note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
         res.json({ note });
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
+        console.error(err);
+        res.status(500).json("Server Error");
     }
 });
 
@@ -84,7 +84,7 @@ router.delete('/deletenotes/:id', fetchUser, async(req, res) => {
         res.json({ "Success": "Note has been deleted", "note": note });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server Error");
+        res.status(500).json(err.message);
     }
 });
 

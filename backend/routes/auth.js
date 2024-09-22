@@ -1,4 +1,3 @@
-require('dotenv').config({ path: '.env.local' });
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
@@ -6,7 +5,10 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET;
+const dotenv = require('dotenv');
+dotenv.config({ path: '.env.local' });
+// const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "jwtrandomsecretkey";
 const fetchUser = require('../middleware/fetchUser');
 // Define routes using the router
 
@@ -14,7 +16,7 @@ const fetchUser = require('../middleware/fetchUser');
 router.post('/create', [
     body('username', 'Enter a valid username').isLength({ min: 3 }).isString(),
     body('email', 'Please provide valid Email').isEmail(),
-    body('password', 'Please provide valid Password').isLength({ min: 6 }).isString() // Password must be at least 6 characters long
+    body('password', 'Please provide valid Password').isLength({ min: 5 }).isString() // Password must be at least 5 characters long
 ], async(req, res) => {
     try {
         let user = await User.findOne({
@@ -64,6 +66,7 @@ router.post('/login', [
     body('password', 'Please provide valid Password').exists()
 ], async(req, res) => {
     try {
+        // return res.status(200).send(JWT_SECRET);
         let user = await User.findOne({
             $or: [
                 { username: req.body.useroremail },
@@ -73,12 +76,17 @@ router.post('/login', [
 
         if (user) {
 
+            const passwordCompare = await bcrypt.compare(req.body.password, user.password);
+            if (!passwordCompare) {
+                success = false
+                return res.status(400).json({ success, error: "Please try to login with correct credentials" });
+            }
             const salt = bcrypt.genSaltSync(saltRounds);
             const hash = bcrypt.hashSync(req.body.password, salt);
             data = {
-                user: user.id
-            }
-            console.log(JWT_SECRET);
+                    user: user.id
+                }
+                // return res.status(200).send(JWT_SECRET);
 
             var token = jwt.sign(data, JWT_SECRET);
             return res.status(200).json({
@@ -90,7 +98,7 @@ router.post('/login', [
         }
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server Error");
+        res.status(500).json(err.message);
     }
 });
 
