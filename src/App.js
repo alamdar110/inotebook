@@ -5,10 +5,13 @@ import Home from './components/Home';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import NoteState from './context/notes/NoteState';
+import Alert from './components/Alert';
+import AlertState from './context/alert/AlertState';
 
 function App() {
   return (
     <NoteState>
+    <AlertState>
     <Router>
     <Navbar />
     <Routes>
@@ -17,6 +20,7 @@ function App() {
         <Route exact path="/signup" element={<SignUp />}/>
     </Routes>
     </Router>
+    </AlertState>
     </NoteState>
   );
 }

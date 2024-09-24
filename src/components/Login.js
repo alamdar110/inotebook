@@ -1,7 +1,10 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import { useNavigate } from "react-router-dom";
+import AlertContext from '../context/alert/alertContext';
 
 export default function Login() {
+    const context = useContext(AlertContext);
+    const setAlert = context.showAlert;
     const [credentials, setCredentials] = useState({useroremail: "", password: ""});
     const handleInputChange = (e) => {
         setCredentials({...credentials, [e.target.id]: e.target.value});
@@ -28,10 +31,11 @@ export default function Login() {
                     navigate("/");
 
             } else {
-                    alert("Invalid credentials");
+                setAlert("Invalid credentials", "danger");
             }
         } catch (error) {
-           alert("Invalid credentials");
+            console.error("Error in login", error);
+            setAlert("Invalid credentials", "danger");
         }
         
     }

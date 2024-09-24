@@ -1,9 +1,12 @@
 import React, { useState, useContext } from "react";
 import noteContext from "../context/notes/noteContext";
+import alertContext from "../context/alert/alertContext";
 
 export default function Addnote(props) {
   const context = useContext(noteContext);
   const addNote = context.addNote;
+  const alContext = useContext(alertContext);
+  const showAlert = alContext.showAlert;
   const [note, setNote] = useState({ title: "", description: "" });
   const handleSubmitt = (e) => {
     e.preventDefault();
@@ -12,10 +15,7 @@ export default function Addnote(props) {
       title: "",
       description: "",
       tag: ""});
-      props.setMessage("Note added successfully");
-      setTimeout(() => {
-        props.setMessage("");
-      }, 1500);
+      showAlert("Note added successfully", "success");
   };
   const handleChange = (e) => {
     setNote({ ...note, [e.target.id]: e.target.value });

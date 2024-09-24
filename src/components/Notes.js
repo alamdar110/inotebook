@@ -1,13 +1,16 @@
 import React, { useContext, useState } from "react";
 import noteContext from "../context/notes/noteContext";
+import alertContext from "../context/alert/alertContext";
 import Noteitem from "./Noteitem";
 import Addnote from "./Addnote";
-import Topbar from "./TopBar";
+import Alert from "./Alert";
 
 export default function () {
+  const alContext = useContext(alertContext);
+  const showAlert = alContext.showAlert;
   const [message, setMessage] = useState("");
-  const context = useContext(noteContext);
-  let { notes, editNote } = context;
+  const noContext = useContext(noteContext);
+  let { notes, editNote } = noContext;
   const [enote, setEnote] = useState({
     id: "",
     title: "",
@@ -31,7 +34,7 @@ export default function () {
     console.log("updating the note", enote);
     editNote(enote.id, enote.title, enote.description, enote.tag);
     refClose.current.click();
-    setMessage("Note updated successfully");
+    showAlert("Note updated successfully", "success");
     setTimeout(() => {
       setMessage("");
     }, 1500);
@@ -41,7 +44,7 @@ export default function () {
 
   return (
     <>
-      <Topbar message={message} />
+      <Alert alert={alert} />
       <div className="container my-3">
         <div className="row">
           <Addnote setMessage={setMessage} />
