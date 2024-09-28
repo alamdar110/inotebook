@@ -12,8 +12,6 @@ const fetchUser = async(req, res, next) => {
         req.user = data.user;
         next();
     } catch (error) {
-        //allow temporarily
-        // next();
         res.status(401).send({ error: "Please authenticate using a valid token" });
     }
 };

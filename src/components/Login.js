@@ -1,10 +1,12 @@
 import React, {useContext, useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import AlertContext from '../context/alert/alertContext';
+import Alert from './Alert';
 
 export default function Login() {
     const context = useContext(AlertContext);
-    const setAlert = context.showAlert;
+    const showAlert = context.showAlert;
+    const alert = context.alert;
     const [credentials, setCredentials] = useState({useroremail: "", password: ""});
     const handleInputChange = (e) => {
         setCredentials({...credentials, [e.target.id]: e.target.value});
@@ -27,21 +29,23 @@ export default function Login() {
             });
             let json = await response.json();
             if(json.token) {
-                    localStorage.setItem('token', json.token);
-                    navigate("/");
-
+                localStorage.setItem('token', json.token);
+                navigate("/");
             } else {
-                setAlert("Invalid credentials", "danger");
+                showAlert("Invalid credentials", "danger");
             }
         } catch (error) {
             console.error("Error in login", error);
-            setAlert("Invalid credentials", "danger");
+            showAlert("Invalid credentials", "danger");
         }
         
     }
-    return ( 
+    return (
+        <>
+        <Alert alert={alert} />
+        <div className="container container my-3">
+        <h2>Login to continue</h2>
         <form className="container my-3" onSubmit={onSubmit}>
-        <h2>Login</h2>
         <div className="mb-3">
           <label htmlFor="useroremail" className="form-label">Email address</label>
           <input onChange={handleInputChange} type="text" className="form-control" id="useroremail" aria-describedby="email"/>
@@ -53,5 +57,7 @@ export default function Login() {
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
         </form>
+        </div> 
+        </>
     )
 }

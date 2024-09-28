@@ -2,9 +2,6 @@ import NoteContext from "./noteContext";
 import { useEffect, useState } from "react";
 
 const NoteState = (props) => {
-    useEffect(() => {
-        fetchNotes();
-    }, []);
     const host = "http://localhost:5000";
    const notesInitial = [];
     const [notes, setnotes] = useState(notesInitial);
@@ -12,7 +9,7 @@ const NoteState = (props) => {
         const apiUrl = `${host}/api/notes/fetchnotes`;
         const headers = {
             "Content-Type": "application/json",
-            "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjY1ZDhmZDEzYzYyYWU4ZGYwNzhiZTljIiwiaWF0IjoxNzI1NDUyMTI2fQ.a4AULT1zdBDs9LYd5BnMrPQC4AlGBr3qxV5M_ZjLsQo"
+            "auth-token": localStorage.getItem('token')
         }
         const response = await fetch(apiUrl, {
             method: "GET",
@@ -29,7 +26,7 @@ const NoteState = (props) => {
         const apiUrl = `${host}/api/notes/writenotes`;
         const headers = {
             "Content-Type": "application/json",
-            "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjY1ZDhmZDEzYzYyYWU4ZGYwNzhiZTljIiwiaWF0IjoxNzI1NDUyMDAxfQ.2-5qFbqqPncN4tbJTWjoUDM8KvcGgJC-Xg4x4xK8GOc"
+            "auth-token": localStorage.getItem('token')
         }
         const response = await fetch(apiUrl, {
             method: "POST",
@@ -48,7 +45,7 @@ const NoteState = (props) => {
         console.log(title);
         const headers = {
             "Content-Type": "application/json",
-            "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjY1ZDhmZDEzYzYyYWU4ZGYwNzhiZTljIiwiaWF0IjoxNzI1NDUyMDAxfQ.2-5qFbqqPncN4tbJTWjoUDM8KvcGgJC-Xg4x4xK8GOc"
+            "auth-token": localStorage.getItem('token')
         };
         const response = await fetch(apiUrl, {
             method: "PUT",
@@ -76,7 +73,7 @@ const NoteState = (props) => {
         const apiUrl = `${host}/api/notes/deletenotes/${id}`;
         const headers = {
             "Content-Type": "application/json",
-            "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjY1ZDhmZDEzYzYyYWU4ZGYwNzhiZTljIiwiaWF0IjoxNzI1NDUyMDAxfQ.2-5qFbqqPncN4tbJTWjoUDM8KvcGgJC-Xg4x4xK8GOc"
+            "auth-token": localStorage.getItem('token')
         };
         const response = await fetch(apiUrl, {
             method: "DELETE",
@@ -92,7 +89,7 @@ const NoteState = (props) => {
 
 
     return (
-        <NoteContext.Provider value={{notes, addNote, deleteNote, editNote}}>
+        <NoteContext.Provider value={{notes, addNote, deleteNote, editNote, fetchNotes}}>
             {props.children}
         </NoteContext.Provider>
     )   
